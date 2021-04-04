@@ -19,7 +19,7 @@ OR
 
 Without historical metric
 ````
-$keywordIdeaMetrics = $googleAdsManager->getKeywordIdeaMetrics( $data, 'EN');
+$keywordIdeaMetrics = $googleAdsManager->getKeywordIdeaMetrics( $data, 'US');
 ````
 
 #

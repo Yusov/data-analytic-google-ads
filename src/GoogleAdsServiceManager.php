@@ -75,7 +75,7 @@ class GoogleAdsServiceManager
     ): void {
         $googleAdsServiceClient = $googleAdsClient->getGoogleAdsServiceClient();
 
-        $query = "SELECT language_constant.resource_name FROM language_constant WHERE language_constant.code = '$languageCode'"; //TODO REMOVE IT
+        $query = "SELECT language_constant.resource_name FROM language_constant WHERE language_constant.code = '$languageCode'";
 
         $search = $googleAdsServiceClient->search($customerId, $query);
 
