@@ -160,16 +160,14 @@ class GoogleAdsManager
                         'keywordPlanNetwork' => KeywordPlanNetwork::GOOGLE_SEARCH_AND_PARTNERS,
                     ] + $requestOptionalArgs
                 );
-        }
-        catch (ApiException $e) {
-            echo $e->getMessage();
-        }
 
-        $keywordIdeaMetrics = [];
+            $keywordIdeaMetrics = [];
 
-        foreach ($response->iterateAllElements() as $num => $result) {
-            $keyWord = $result->getText();
-            if (in_array($keyWord, $keywords, true) && $num < count($keywords)) {
+            foreach ($response->iterateAllElements() as $num => $result) {
+                $keyWord = $result->getText();
+                if (!in_array($keyWord, $keywords, true)) {
+                    continue;
+                }
                 $resultKeywordIdeaMetrics = $result->getKeywordIdeaMetrics();
 
                 $keywordIdeaMetrics[] = [
@@ -182,13 +180,13 @@ class GoogleAdsManager
                     'searchesLastYear' => 0,
                     'keySearchesFirstMonth' => 0,
                 ];
-            } else {
-                break;
             }
+
+            return $keywordIdeaMetrics;
         }
-
-        return $keywordIdeaMetrics;
-
+        catch (ApiException $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
