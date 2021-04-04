@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace DataAnalytic\KeyWordsManagement\Utils;
 
 use LogicException;
 
@@ -14,7 +14,7 @@ final class ConnectionResolver
 
     public function __construct()
     {
-        $configPath = $_SERVER['DOCUMENT_ROOT'] . self::CONFIG_FILE_PATCH;
+        $configPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . self::CONFIG_FILE_PATCH;
 
         if (!file_exists($configPath)) {
             throw new LogicException('File ' . $configPath . ' not found');

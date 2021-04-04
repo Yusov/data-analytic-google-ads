@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace DataAnalytic\KeyWordsManagement;
 
-use App\Utils\ConnectionResolver;
-use App\Utils\Helper;
+use DataAnalytic\KeyWordsManagement\Utils\ConnectionResolver;
+use DataAnalytic\KeyWordsManagement\Utils\Helper;
 use ErrorException;
 use Exception;
 use Google\Ads\GoogleAds\Lib\OAuth2TokenBuilder;

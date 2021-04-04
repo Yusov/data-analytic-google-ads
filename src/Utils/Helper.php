@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace DataAnalytic\KeyWordsManagement\Utils;
 
 use DateTime;
 use Exception;

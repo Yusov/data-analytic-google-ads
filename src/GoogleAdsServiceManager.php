@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace DataAnalytic\KeyWordsManagement;
 
 use Google\Ads\GoogleAds\Lib\V6\GoogleAdsClient;
 use Google\Ads\GoogleAds\V6\Services\SuggestGeoTargetConstantsRequest\LocationNames;
