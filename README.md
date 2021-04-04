@@ -1,8 +1,10 @@
-####Installation:
+Installation:
 
 ``composer require data-analytic/google-ads``
 #
-####Example: 
+
+Example: 
+
 With historical metric and export into the excel file:
 ````
 $data = [
@@ -22,7 +24,8 @@ $keywordIdeaMetrics = $googleAdsManager->getKeywordIdeaMetrics( $data, 'EN');
 
 #
 
-####Dependencies:
+Dependencies:
+
 `php > 7.2` <br>
 `phpoffice/phpspreadsheet` <br>
 `googleads/google-ads-php` <br>
