@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataAnalytic\KeyWordsManagement;
 
+use DataAnalytic\KeyWordsManagement\Service\GoogleAdsService;
 use DataAnalytic\KeyWordsManagement\Utils\ConnectionResolver;
 use DataAnalytic\KeyWordsManagement\Utils\Helper;
 use ErrorException;
@@ -32,13 +33,17 @@ use Google\Ads\GoogleAds\V6\Services\UrlSeed;
 use Google\ApiCore\ApiException;
 use Google\ApiCore\ValidationException;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Класс-менеджер для работы с гугл сдк.
  */
-class GoogleAdsManager
+final class GoogleAdsManager
 {
-    private const CUSTOMER_ID = 1937727670;
+    /**
+     * @var integer
+     */
+    private $customerId;
 
     /**
      * @var GoogleAdsClient $googleAdsClient
@@ -46,10 +51,17 @@ class GoogleAdsManager
     private $googleAdsClient;
 
     /**
-     *  Конструктор, инициализирует объект @var ConnectionResolver $googleAdsClient
+     * @param ConnectionResolver $connection
+     * @param int|null $customerId
      */
-    public function __construct(ConnectionResolver $connection)
+    public function __construct(ConnectionResolver $connection, ?int $customerId = null)
     {
+        if (!$customerId) {
+            throw new LogicException('Connection refused. Customer id is mandatory');
+        }
+
+        $this->customerId = $customerId;
+
         $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile($connection->getConfig())->build();
 
         $this->googleAdsClient = (new GoogleAdsClientBuilder())
@@ -72,29 +84,27 @@ class GoogleAdsManager
      */
     public function getKeywordMetric(array $data, string $locationId): array
     {
-        $customerId = self::CUSTOMER_ID;
-
         $keywordPlanResource = self::createKeywordPlan( // Создание плана ключевых слов
             $this->googleAdsClient,
-            $customerId
+            $this->customerId
         );
 
         $planCampaignResource = self::createKeywordPlanCampaign( // Создание компании ключевых слов для плана ключевых слов
             $this->googleAdsClient,
-            $customerId,
+            $this->customerId,
             $keywordPlanResource,
             $locationId
         );
 
         $planAdGroupResource = self::createKeywordPlanAdGroup( // Создание рекламнной группы для компании ключевых слов
             $this->googleAdsClient,
-            $customerId,
+            $this->customerId,
             $planCampaignResource
         );
 
         self::createKeywordPlanAdGroupKeywords( // Добавление ключевых слов в рекламную группу
             $this->googleAdsClient,
-            $customerId,
+            $this->customerId,
             $planAdGroupResource,
             $data
 
@@ -103,7 +113,7 @@ class GoogleAdsManager
         // Формирование исторической метрики плана ключевых слов
         $historicalMetric = self::getHistoricalMetric($this->googleAdsClient, $keywordPlanResource);
         // Удаление плана ключевых слов
-        self::removeKeyWordPLan($this->googleAdsClient, $customerId, $keywordPlanResource);
+        self::removeKeyWordPLan($this->googleAdsClient, $this->customerId, $keywordPlanResource);
 
         return $historicalMetric;
     }
@@ -146,16 +156,16 @@ class GoogleAdsManager
         }
 
         $geoTargetConstants = [];
-        $geoTargetConstants[] = GoogleAdsServiceManager::getGeoTargetConstant($this->googleAdsClient, $locationId);
+        $geoTargetConstants[] = GoogleAdsService::getGeoTargetConstant($this->googleAdsClient, $locationId);
         try {
             $response = $this->googleAdsClient
                 ->getKeywordPlanIdeaServiceClient()
                 ->generateKeywordIdeas(
                     [
-                        'language' => GoogleAdsServiceManager::getLanguageConstant($this->googleAdsClient,
+                        'language' => GoogleAdsService::getLanguageConstant($this->googleAdsClient,
                             $languageCode,
-                            self::CUSTOMER_ID),
-                        'customerId' => self::CUSTOMER_ID,
+                            $this->customerId),
+                        'customerId' => $this->customerId,
                         'geoTargetConstants' => $geoTargetConstants,
                         'keywordPlanNetwork' => KeywordPlanNetwork::GOOGLE_SEARCH_AND_PARTNERS,
                     ] + $requestOptionalArgs
@@ -335,7 +345,7 @@ class GoogleAdsManager
 
         $keywordPlanCampaign->setGeoTargets([
             new KeywordPlanGeoTarget([
-                'geo_target_constant' => GoogleAdsServiceManager::getGeoTargetConstant($googleAdsClient, $locationId),
+                'geo_target_constant' => GoogleAdsService::getGeoTargetConstant($googleAdsClient, $locationId),
             ]),
         ]);
 

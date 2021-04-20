@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DataAnalytic\KeyWordsManagement;
+namespace DataAnalytic\KeyWordsManagement\Utils;
 
 use LogicException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DataAnalytic\KeyWordsManagement;
+namespace DataAnalytic\KeyWordsManagement\Service;
 
 use Google\Ads\GoogleAds\Lib\V6\GoogleAdsClient;
 use Google\Ads\GoogleAds\V6\Services\SuggestGeoTargetConstantsRequest\LocationNames;
@@ -12,7 +12,7 @@ use Google\ApiCore\ValidationException;
 /**
  * Класс-менеджер для работы с google ads api service. Получает и сохраняет константы
  */
-class GoogleAdsServiceManager
+final class GoogleAdsService
 {
     /**
      * @var static $geoTargetConstants - статический массив geo target констант

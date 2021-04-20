@@ -12,9 +12,13 @@ final class ConnectionResolver
 
     private $config;
 
-    public function __construct()
+    public function __construct(string $configFilePath = null)
     {
-        $configPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . self::CONFIG_FILE_PATCH;
+        if ($configFilePath) {
+            $configPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $configFilePath;
+        } else {
+            $configPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . self::CONFIG_FILE_PATCH;
+        }
 
         if (!file_exists($configPath)) {
             throw new LogicException('File ' . $configPath . ' not found');
