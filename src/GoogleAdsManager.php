@@ -51,23 +51,19 @@ final class GoogleAdsManager
     private $googleAdsClient;
 
     /**
-     * @param ConnectionResolver $connection
      * @param int|null $customerId
+     * @param string|null $configFilePath
      */
-    public function __construct(ConnectionResolver $connection, ?int $customerId = null)
+    public function __construct(?int $customerId = null, ?string $configFilePath = null)
     {
         if (!$customerId) {
             throw new LogicException('Connection refused. Customer id is mandatory');
         }
 
         $this->customerId = $customerId;
-
-        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile($connection->getConfig())->build();
-
-        $this->googleAdsClient = (new GoogleAdsClientBuilder())
-            ->fromFile($connection->getConfig())
-            ->withOAuth2Credential($oAuth2Credential)
-            ->build();
+        $this->googleAdsClient = ConnectionResolver::getInstance()
+            ->init($configFilePath)
+            ->getClient();
     }
 
     /**
