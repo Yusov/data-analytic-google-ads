@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DataAnalytic\KeyWordsManagement;
 
-use DataAnalytic\KeyWordsManagement\Utils\ConnectionResolver;
 use ErrorException;
 use Google\ApiCore\ApiException;
 use Google\ApiCore\ValidationException;
@@ -26,8 +25,8 @@ class GoogleKeyWordPlanner
     public function __construct(string $configFilePath, int $customerId)
     {
         $this->googleAdsManager = new GoogleAdsManager(
-            new ConnectionResolver($configFilePath),
-            $customerId
+            $customerId,
+            $configFilePath
         );
     }
 
